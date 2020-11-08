@@ -6,7 +6,7 @@
  Version: 1.0
  */
 
- /*------------------ CPT */
+ /*------------------ Custom Post Type */
 
 function create_i_heart_it(){
     register_post_type('heart_it',
@@ -17,6 +17,7 @@ function create_i_heart_it(){
             ),
             'public' => true,
             'has_archive' => true,
+            'menu_icon' =>'dashicons-heart',
             'supports'=> array('title', 'editor', 'author', 'thumbnail')
         )
     );
@@ -65,12 +66,25 @@ function create_hearts_table(){
     dbDelta( $sql );
 }
 
-/*---------------------- Adding the likes to the database when the botton is clicked */
+/*---------------------- Creating the heart button */ 
 
-function adding_the_hearts(){
-    
+function adding_the_heart_button($content){
+    global $wpdb;
+    if( is_singular() && in_the_loop() && is_main_query() ){
+        $id = get_the_ID();
+        $user_id = wp_get_current_user();
+
+        $wpdb->get_results( "SELECT * FROM hearts_table WHERE (owner_id = $user_id->ID AND post_id = $id)" );
+        if($wpdb->num_rows == 0){
+            return $content .
+
+            '<a href="#" class="heart-it" id="heart-it-%s" data-post-id="%s"><span>%s</span></a>';
+        }
+    }
+    return $content;
 }
 
+/*---------------------- Adding the hearts in a new row in the database when the botton is clicked & changing the style of the button*/
 
 /*---------------------- Unlike botton*/
 
@@ -85,6 +99,8 @@ function remove_hearts(){
 add_action('save_post', 'save_item');
 add_action('init', 'create_i_heart_it');
 add_action('add_meta_boxes', 'adding_the_meta_boxes_itens');
+
+add_filter('the_content', 'adding_the_heart_button'); 
 
 register_activation_hook(__FILE__, 'create_hearts_table'); 
 register_deactivation_hook(__FILE__, 'remove_hearts');
