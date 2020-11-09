@@ -80,7 +80,7 @@ function create_the_heart_button($content){
         $wpdb->get_results( "SELECT * FROM $table_name WHERE (owner_id = $user_id->ID AND post_id = $id)" );
         if($wpdb->num_rows == 0){
             return $content .
-            // next: create a form and add style input type=submit?
+            // next: create a form and add style input type=submit? 
             
             '<form method="POST" id="heart-btn-form">   
             <input type=hidden name=order value=$id>          
@@ -102,7 +102,7 @@ function create_the_heart_button($content){
 
         $wpdb->query("INSERT INTO wp_hearts_table(user_id, post_id) VALUES ($user_id, $post_id)");
     }
-}*/
+} array?? */
 function heart_input() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'hearts_table';
@@ -138,7 +138,7 @@ register_activation_hook(__FILE__, 'create_hearts_table');
 register_deactivation_hook(__FILE__, 'remove_hearts');
 register_uninstall_hook(__FILE__, 'remove_hearts');
 
-// CSS
+/*----------------------  Scripts */
 
 function adding_the_heart_it_scripts() {
      
