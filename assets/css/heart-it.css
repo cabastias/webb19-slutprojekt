@@ -1,0 +1,13 @@
+/*
+  Plugin CSS
+*/
+
+#heart-btn {
+  background-color: white !important;
+}
+
+#heart-btn-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: right !important;
+}

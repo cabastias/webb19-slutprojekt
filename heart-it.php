@@ -6,9 +6,11 @@
  Version: 1.0
  */
 
+
  /*------------------ Custom Post Type */
 
 function create_i_heart_it(){
+    
     register_post_type('heart_it',
         array(
             'labels' => array(
@@ -68,27 +70,55 @@ function create_hearts_table(){
 
 /*---------------------- Creating the heart button */ 
 
-function adding_the_heart_button($content){
+function create_the_heart_button($content){
     global $wpdb;
+    $table_name = $wpdb->prefix . 'hearts_table';
     if( is_singular() && in_the_loop() && is_main_query() ){
         $id = get_the_ID();
         $user_id = wp_get_current_user();
 
-        $wpdb->get_results( "SELECT * FROM hearts_table WHERE (owner_id = $user_id->ID AND post_id = $id)" );
+        $wpdb->get_results( "SELECT * FROM $table_name WHERE (owner_id = $user_id->ID AND post_id = $id)" );
         if($wpdb->num_rows == 0){
             return $content .
-
-            '<a href="#" class="heart-it" id="heart-it-%s" data-post-id="%s"><span>%s</span></a>';
+            // next: create a form and add style input type=submit?
+            
+            '<form method="POST" id="heart-btn-form">   
+            <input type=hidden name=order value=$id>          
+            <button id="heart-btn">&#10084;<span>Heart it</span></button>                                  
+            </form>';
         }
     }
     return $content;
 }
 
-/*---------------------- Adding the hearts in a new row in the database when the botton is clicked & changing the style of the button*/
+/*---------------------- Adding functionality to the heart button */
+/*	the heart changes to=> 128525	1F60D	 	SMILING FACE WITH HEART-SHAPED EYES*/
 
-/*---------------------- Unlike botton*/
+ /*function heart_input() {
+    global $wpdb;
+    if(isset($_POST['heart-btn'])){
+        $post_id = $_POST['id'];
+        $user_id = get_current_user_id();
+
+        $wpdb->query("INSERT INTO wp_hearts_table(user_id, post_id) VALUES ($user_id, $post_id)");
+    }
+}*/
+function heart_input() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'hearts_table';
+    if(isset($_POST['heart-btn'])){
+        $id = get_the_ID();
+        $user_id = wp_get_current_user();
+
+        $wpdb->query("INSERT INTO $table_name(user_id, post_id) VALUES ($user_id, $post_id)");
+    }
+}
+
+
+/*---------------------- IF THERE IS TIME: create Unlike/unheart botton*/
 
 /*---------------------- Deactivate if uninstalled */
+
 function remove_hearts(){
     global $wpdb;
     $table_name = $wpdb->prefix . "hearts_table";
@@ -100,10 +130,22 @@ add_action('save_post', 'save_item');
 add_action('init', 'create_i_heart_it');
 add_action('add_meta_boxes', 'adding_the_meta_boxes_itens');
 
-add_filter('the_content', 'adding_the_heart_button'); 
+
+add_filter('the_content', 'create_the_heart_button'); 
+add_action('init', 'heart_input');
 
 register_activation_hook(__FILE__, 'create_hearts_table'); 
 register_deactivation_hook(__FILE__, 'remove_hearts');
 register_uninstall_hook(__FILE__, 'remove_hearts');
+
+// CSS
+
+function adding_the_heart_it_scripts() {
+     
+    wp_enqueue_style( 'style', plugins_url('assets/css/heart-it.css', __FILE__)); 
+}
+
+add_action( 'wp_enqueue_scripts', 'adding_the_heart_it_scripts' );
+
 
 
