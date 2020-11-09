@@ -82,38 +82,31 @@ function create_the_heart_button($content){
             return $content .
             // next: create a form and add style input type=submit? 
             
-            '<form method="POST" id="heart-btn-form">   
-            <input type=hidden name=order value=$id>          
-            <button id="heart-btn">&#10084;<span>Heart it</span></button>                                  
-            </form>';
+            "<form method=\"POST\" id=\"heart-btn-form\">   
+            <input type=hidden name=heart-btn value=$id>         
+            <button id=\"heart-btn\">&#10084;<span>Heart it</span></button>                                  
+            </form>";
         }
     }
     return $content;
 }
 
 /*---------------------- Adding functionality to the heart button */
-/*	the heart changes to=> 128525	1F60D	 	SMILING FACE WITH HEART-SHAPED EYES*/
 
- /*function heart_input() {
-    global $wpdb;
-    if(isset($_POST['heart-btn'])){
-        $post_id = $_POST['id'];
-        $user_id = get_current_user_id();
 
-        $wpdb->query("INSERT INTO wp_hearts_table(user_id, post_id) VALUES ($user_id, $post_id)");
-    }
-} array?? */
+
 function heart_input() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'hearts_table';
     if(isset($_POST['heart-btn'])){
-        $id = get_the_ID();
-        $user_id = wp_get_current_user();
+        $post_id = $_POST['heart-btn'];
+        $user_id = get_current_user_id();
 
-        $wpdb->query("INSERT INTO $table_name(user_id, post_id) VALUES ($user_id, $post_id)");
+        $wpdb->query("INSERT INTO $table_name(owner_id, post_id) VALUES ($user_id, $post_id)");
     }
 }
 
+/*	the heart changes to=> 128525	1F60D	 	SMILING FACE WITH HEART-SHAPED EYES*/
 
 /*---------------------- IF THERE IS TIME: create Unlike/unheart botton*/
 
