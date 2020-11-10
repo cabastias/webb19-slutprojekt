@@ -80,20 +80,27 @@ function create_the_heart_button($content){
         $wpdb->get_results( "SELECT * FROM $table_name WHERE (owner_id = $user_id->ID AND post_id = $id)" );
         if($wpdb->num_rows == 0){
             return $content .
-            // next: create a form and add style input type=submit? 
-            
-            "<form method=\"POST\" id=\"heart-btn-form\">   
-            <input type=hidden name=heart-btn value=$id>         
-            <button id=\"heart-btn\">&#10084;<span>Heart it</span></button>                                  
+            // next: create a form and add style input type=submit? &#10084;
+                        
+            "<form method=POST id=\"heart-btn-form\">   
+            <input type=hidden name=heart-btn value=$id>                     
+            <button id=\"heart-btn\">&#10084</button>                                  
             </form>";
-        }
+
+
+        }else if(isset($_POST['heart-btn'])) {
+            /*when the button is clicked so this happens:  &#128540;*/
+            return $content .
+            "<form method=POST id=\"heart-btn-clicked\">   
+            <input type=hidden name=heart-btn-clicked value=$id>         
+            <button id=\"heart-btn-clicked\">&#128540;</button>                                  
+            </form>"; 
+        }  
     }
     return $content;
 }
 
 /*---------------------- Adding functionality to the heart button */
-
-
 
 function heart_input() {
     global $wpdb;
@@ -106,7 +113,10 @@ function heart_input() {
     }
 }
 
-/*	the heart changes to=> 128525	1F60D	 	SMILING FACE WITH HEART-SHAPED EYES*/
+/*----------------------	Changin the heart icon
+the heart changes to=> 128525	1F60D	 	SMILING FACE WITH HEART-SHAPED EYES*/
+
+
 
 /*---------------------- IF THERE IS TIME: create Unlike/unheart botton*/
 
@@ -136,6 +146,7 @@ register_uninstall_hook(__FILE__, 'remove_hearts');
 function adding_the_heart_it_scripts() {
      
     wp_enqueue_style( 'style', plugins_url('assets/css/heart-it.css', __FILE__)); 
+    wp_enqueue_script('js', plugins_url('assets/js/heart-it.js', __FILE__));
 }
 
 add_action( 'wp_enqueue_scripts', 'adding_the_heart_it_scripts' );
