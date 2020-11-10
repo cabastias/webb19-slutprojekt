@@ -1,10 +1,9 @@
 /*
   Plugin CSS
 */
-
-#heart-btn {
-  background-color: white !important;
-}
+ #heart-btn {
+   background-color: white !important;
+ }
 
 #heart-btn-form {
   display: flex;

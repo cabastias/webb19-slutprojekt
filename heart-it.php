@@ -39,7 +39,7 @@ function save_item($item_id){
 function adding_the_meta_boxes_itens(){
     add_meta_box(
         "item_price",
-        "Price",
+        "price",
         "post_meta_box_price",
         "heart_it"
     );
@@ -84,16 +84,16 @@ function create_the_heart_button($content){
                         
             "<form method=POST id=\"heart-btn-form\">   
             <input type=hidden name=heart-btn value=$id>                     
-            <button id=\"heart-btn\">&#10084</button>                                  
+            <button id=\"heart-btn\">&#10084;</button>                                   
             </form>";
 
 
-        }else if(isset($_POST['heart-btn'])) {
+        }else {
             /*when the button is clicked so this happens:  &#128540;*/
             return $content .
             "<form method=POST id=\"heart-btn-clicked\">   
             <input type=hidden name=heart-btn-clicked value=$id>         
-            <button id=\"heart-btn-clicked\">&#128540;</button>                                  
+            <button id=\"heart-btn-clicked\">&#128540;</button>                                    
             </form>"; 
         }  
     }
