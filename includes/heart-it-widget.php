@@ -1,8 +1,6 @@
 <?php
 /*
-
  Heart it widget
-
  */
 
 class heart_it_widget extends WP_Widget{
@@ -16,60 +14,58 @@ class heart_it_widget extends WP_Widget{
         );
     }
  
-public function widget( $args, $instance ) {
+    public function widget( $args, $instance ) {
+        global $wpdb;
+        $user_id = get_current_user_id();
+        $id = get_the_ID();
+        $title = apply_filters( 'widget_title', $instance['title'] );
 
-   /*  extract( $args );
-    $title = apply_filters( 'widget_title', $instance['title'] ); */
+        echo $before_widget;
+        //Sql injection 
+        $results = $wpdb->get_results(
+            "SELECT wp_hearts_table.post_id, 
+            wp_hearts_table.owner_id, 
+            wp_posts.post_title          
+            FROM wp_hearts_table 
+            INNER JOIN wp_posts 
+            ON wp_posts.ID = wp_hearts_table.post_id 
+            WHERE wp_hearts_table.owner_id = $user_id" ); 
+     
+        //Widget content output
+        echo '<h4>My Heart It Posts &#10084;</h4>';
+        //Filter posts by owner_id/current_user
+        if(!empty($instance['amount'])){
+            //list of posts
+            echo "<ul>";
+                foreach($results as $result){ 
+                    echo "<li>";
+                    ?>
+                    <a href="<?php echo get_permalink($result->post_id) ?>">
+                    <?php echo $result->post_title ?>
+                    </a>
+                    <?php
+                    echo "</li>";
+                }
+            echo "</ul>";
+        }
 
-    echo $before_widget;
-    global $wpdb;
-
-    $results = $wpdb->get_results(
-        "SELECT wp_hearts_table.post_id, wp_posts.post_title,           
-        FROM wp_hearts_table 
-        INNER JOIN wp_posts 
-        ON wp_posts.ID = wp_hearts_table.post_id " . $instance['quantity']); 
-
-    //Widget content output
-    echo '<h4>My Heart It Posts &#10084;</h4>';
-    
-    if(!empty($instance['amount'])){
-
-        echo "<ul>";
-            foreach($results as $result){ 
-                echo "<li>";
-                ?>
-                <a href="<?php echo get_permalink($result->post_id) ?>">
-                <?php echo $result->post_title ?>
-                </a>
-                <?php
-                echo "</li>";
-            }
-        echo "</ul>";
+        echo $after_widget;
     }
 
-    echo $after_widget;
+     public function form( $instance ) { 
+          //what shows in the form in the backend
+          ?>
+          <h4>Number of posts to show</h4>    
+          <?php   
+           printf('<input type="number" name="%s" value="%s" placeholder="Choose how many posts"></input>', $this->get_field_name("amount"), $instance['amount']);
+     }
+     //saves the value to be displayed
+     public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['amount'] = ( ! empty( $new_instance['amount'] ) ) ? sanitize_text_field( $new_instance['amount'] ) : '';
+
+		return $instance;
+	}
+        
 }
 
-// public function form( $instance ) { }
-    //what is shown in the form in the backend
-    
-    
-   /* ?>
-    <p>
-        <label for="<?php echo $this->get_field_name( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
-        <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
-    </p>
-    <?php */
-   
-     
-    /* public function update( $new_instance, $old_instance ) {
-        $instance = array(); //all fields
-
-        $instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
- 
-        return $instance;
-    } */
- 
-} 
- 

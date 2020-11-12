@@ -76,7 +76,7 @@ function create_the_heart_button($content){
     if( is_singular() && in_the_loop() && is_main_query() ){
         $id = get_the_ID();
         $user_id = wp_get_current_user();
-
+        //Sql injection 
         $wpdb->get_results( "SELECT * FROM $table_name WHERE (owner_id = $user_id->ID AND post_id = $id)" );
         if($wpdb->num_rows == 0){
             return $content .
@@ -108,15 +108,10 @@ function heart_input() {
     if(isset($_POST['heart-btn'])){
         $post_id = $_POST['heart-btn'];
         $user_id = get_current_user_id();
-
+        //Sql injection 
         $wpdb->query("INSERT INTO $table_name(owner_id, post_id) VALUES ($user_id, $post_id)");
     }
 }
-
-/*----------------------	Changin the heart icon
-the heart changes to=> 128525	1F60D	 	SMILING FACE WITH HEART-SHAPED EYES*/
-
-
 
 /*---------------------- IF THERE IS TIME: create Unlike/unheart botton*/
 
