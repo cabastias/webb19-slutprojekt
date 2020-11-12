@@ -22,7 +22,7 @@ class heart_it_widget extends WP_Widget{
 
         echo $before_widget;
         //Sql injection 
-        $results = $wpdb->get_results(
+        $outcomes = $wpdb->get_results(
             "SELECT wp_hearts_table.post_id, 
             wp_hearts_table.owner_id, 
             wp_posts.post_title          
@@ -37,11 +37,11 @@ class heart_it_widget extends WP_Widget{
         if(!empty($instance['amount'])){
             //list of posts
             echo "<ul>";
-                foreach($results as $result){ 
+                foreach($outcomes as $outcome){ 
                     echo "<li>";
                     ?>
-                    <a href="<?php echo get_permalink($result->post_id) ?>">
-                    <?php echo $result->post_title ?>
+                    <a href="<?php echo get_permalink($outcome->post_id) ?>">
+                    <?php echo $outcome->post_title ?>
                     </a>
                     <?php
                     echo "</li>";
