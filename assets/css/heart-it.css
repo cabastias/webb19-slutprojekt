@@ -5,6 +5,9 @@
    background-color: white !important;
  }
 
+#heart-btn-clicked{
+  background-color: white !important;
+}
 #heart-btn-form {
   display: flex;
   flex-wrap: wrap;

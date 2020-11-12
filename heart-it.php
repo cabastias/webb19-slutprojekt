@@ -151,5 +151,10 @@ function adding_the_heart_it_scripts() {
 
 add_action( 'wp_enqueue_scripts', 'adding_the_heart_it_scripts' );
 
+/*----------------------  Load class, register widget and hook */
+require_once(plugin_dir_path(__FILE__).'includes/heart-it-widget.php');
 
-
+function register_heart_it_widget(){
+    register_widget('heart_it_widget');
+}
+add_action('widgets_init', 'register_heart_it_widget'); 
